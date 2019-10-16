@@ -193,13 +193,16 @@
 				TargetAttributes = {
 					4E0D0A3F2325920200698D56 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1100;
 					};
 					4E0D0A532325920300698D56 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1100;
 						TestTargetID = 4E0D0A3F2325920200698D56;
 					};
 					4E0D0A5E2325920300698D56 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1100;
 						TestTargetID = 4E0D0A3F2325920200698D56;
 					};
 				};
@@ -440,7 +443,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.tactech;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -457,7 +460,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.tactech;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -476,9 +479,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.TactechTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tactech.temp_caseinsensitive_rename.app/tactech.temp_caseinsensitive_rename";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tactech.app/Tactech";
 			};
 			name = Debug;
 		};
@@ -496,9 +499,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.TactechTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/tactech.temp_caseinsensitive_rename.app/tactech.temp_caseinsensitive_rename";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tactech.app/Tactech";
 			};
 			name = Release;
 		};
@@ -515,7 +518,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.TactechUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Tactech;
 			};
@@ -534,7 +537,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = seniorproject.TactechUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Tactech;
 			};
