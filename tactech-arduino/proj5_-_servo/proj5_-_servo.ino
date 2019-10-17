@@ -1,73 +1,82 @@
-// [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [0, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0]]
-// [0, 1, 1, 1, 1, 0] # = 18
-/*
-NOTE: Maps and moves servo to a potentiometer
-#include <Servo.h>
+// [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [0, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0]] REAL RECEIPT
+// [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
 
-Servo myServo;
+//LIBRARIES
+#include <Servo.h>  // Servo library
 
-int const potPin = A0;
-int potVal;
-int angle;
-
-void setup(){
-  myServo.attach(9);
-
-  Serial.begin(9600);
-}
-
-void loop(){
-  potVal = analogRead(potPin);
-  Serial.print("potVal: ");
-  Serial.print(potVal);
-  angle = map(potVal, 0, 1023, 0, 179);
-  Serial.print(", angle: ");
-  Serial.println(angle);
-  myServo.write(angle);
-  delay(15);
-}
-*/
-// -------------
-/*
-void setup() {
-  Serial.begin(9600); // Initialize the serial connection at 9600 bits per second
-}
-
-char rx_byte = 0;
-
-void loop() {
-  if (Serial.available() > 0) {    // is a character available?
-    rx_byte = Serial.read();       // get the character
-  
-    // check if a number was received
-    if ((rx_byte >= '0') && (rx_byte <= '9')) {
-      Serial.print("Number received: ");
-      Serial.println(rx_byte);
-    }
-    else {
-      Serial.println("Not a number.");
-    }
-  } // end: if (Serial.available() > 0)
-}*/
-
-// Example 2 - Receive with an end-marker
-
-const byte numChars = 19;       //
-char receivedChars[numChars];   // an array to store the received data
-
+//VARIABLES
+// --- Servos
+Servo peg1;
+Servo peg2;
+// --- Variables for recvAsString()
+const byte numChars = 32; // random number
+char receivedChars[numChars]; // an array to store the received data
 boolean newData = false;
 
+// --- Variables for recvAsArray()
+int brailleArray[6] = {0, 1, 1, 1, 1, 0}; // Braille peg array for 't'
+
+int pos = 0;
+
+//METHODS
+// --- Setup the Board
 void setup() {
+    // Match baud
     Serial.begin(9600);
+
+    // Attach servos
+    peg1.attach(A0);
+    peg2.attach(A1);
+    
     Serial.println("<Arduino is ready>");
 }
 
+// --- Arduino loop
 void loop() {
-    recvWithEndMarker();
-    showNewData();
+  
+    // Receive data as STRING
+    //recvAsString();
+    //showNewData();
+    
+    // Receive data as ARRAY
+    recvAsArray();
+    exit(0);
+
 }
 
-void recvWithEndMarker() {
+// --- Receive data as ARRAY
+// --- [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
+void recvAsArray() {
+  // Reset pegs
+  peg1.write(0);
+  peg2.write(0);
+
+  delay(30);
+  
+  if (brailleArray[0] == 1){
+    for (pos = 0; pos <= 90; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[1] == 1){
+    for (pos = 0; pos <= 90; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+
+  delay(30);
+
+  // Reset pegs
+  peg1.write(0);
+  peg2.write(0);
+}
+
+
+// Receive data as STRING
+// [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
+void recvAsString() {
     static byte ndx = 0;
     char endMarker = '\n';
     char rc;
@@ -90,6 +99,15 @@ void recvWithEndMarker() {
     }
 }
 
+// Reset pegs
+void resetPegs() {
+  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+    peg2.write(pos);                    // tell servo to go to position in variable 'pos'
+    delay(15);                          // waits 15ms for the servo to reach the position
+  }
+}
+
+// Display data in Serial Monitor
 void showNewData() {
     if (newData == true) {
         Serial.print("This just in ... ");
