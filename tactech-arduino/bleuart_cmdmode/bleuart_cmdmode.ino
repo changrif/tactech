@@ -183,7 +183,7 @@ void loop(void)
   // Some data was found, its in the buffer
   Serial.print(F("[Recv] ")); char* c = ble.buffer;
   Serial.println(c);
-  if (strcmp(c, "1234") == 0) {
+  if (strcmp(c, "[[0, 1, 1, 1, 1, 0]]") == 0) {
     // no data
     Serial.println("Turn the damn servo");
     return;
