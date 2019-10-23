@@ -8,6 +8,7 @@
 // --- Servos
 Servo peg1;
 Servo peg2;
+Servo peg3;
 // --- Variables for recvAsString()
 const byte numChars = 32; // random number
 char receivedChars[numChars]; // an array to store the received data
@@ -22,11 +23,16 @@ int pos = 0;
 // --- Setup the Board
 void setup() {
     // Match baud
-    Serial.begin(9600);
+    Serial.begin(115200);
+
 
     // Attach servos
-    peg1.attach(A0);
-    peg2.attach(A1);
+    peg1.attach(A1);
+    peg2.attach(A2);
+    peg3.attach(A3);
+    peg1.write(0);  
+    peg2.write(0);  
+    peg3.write(0);  
     
     Serial.println("<Arduino is ready>");
 }
@@ -40,28 +46,28 @@ void loop() {
     
     // Receive data as ARRAY
     recvAsArray();
-    exit(0);
-
 }
 
 // --- Receive data as ARRAY
 // --- [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
 void recvAsArray() {
-  // Reset pegs
-  peg1.write(0);
-  peg2.write(0);
-
   delay(30);
   
   if (brailleArray[0] == 1){
-    for (pos = 0; pos <= 90; pos += 1) { // goes from 180 degrees to 0 degrees
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg1.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(15);                         // waits 15ms for the servo to reach the position
     }
   }
   if (brailleArray[1] == 1){
-    for (pos = 0; pos <= 90; pos += 1) { // goes from 180 degrees to 0 degrees
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg2.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[2] == 1){
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(15);                         // waits 15ms for the servo to reach the position
     }
   }
@@ -69,8 +75,27 @@ void recvAsArray() {
   delay(30);
 
   // Reset pegs
-  peg1.write(0);
-  peg2.write(0);
+  if (brailleArray[0] == 1){
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[1] == 1){
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[2] == 1){
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+
+  brailleArray[1] = 0;
+  brailleArray[2] = 0;
 }
 
 
@@ -112,6 +137,8 @@ void showNewData() {
     if (newData == true) {
         Serial.print("This just in ... ");
         Serial.println(receivedChars);
+
+        
         newData = false;
     }
 }

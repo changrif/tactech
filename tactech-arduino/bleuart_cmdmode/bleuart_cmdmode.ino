@@ -19,6 +19,7 @@
 #include "Adafruit_BluefruitLE_UART.h"
 
 #include "BluefruitConfig.h"
+#include <Servo.h>  // Servo library
 
 #if SOFTWARE_SERIAL_AVAILABLE
   #include <SoftwareSerial.h>
@@ -92,12 +93,28 @@ void error(const __FlashStringHelper*err) {
             automatically on startup)
 */
 /**************************************************************************/
+
+Servo peg1;
+Servo peg2;
+Servo peg3;
+Servo peg4;
+Servo peg5;
+Servo peg6;
+int brailleArray[6] = {0, 1, 1, 1, 1, 0};
+int pos = 0;
+
 void setup(void)
 {
   while (!Serial);  // required for Flora & Micro
   delay(500);
 
   Serial.begin(115200);
+  
+   // Attach servos
+    peg1.attach(A1);
+    peg2.attach(A2);
+    peg3.attach(A3); 
+    
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
   Serial.println(F("---------------------------------------"));
 
@@ -146,6 +163,9 @@ void setup(void)
     ble.sendCommandCheckOK("AT+HWModeLED=" MODE_LED_BEHAVIOUR);
     Serial.println(F("******************************"));
   }
+
+  Serial.println("<Arduino is ready>");
+
 }
 
 /**************************************************************************/
@@ -186,9 +206,58 @@ void loop(void)
   if (strcmp(c, "[[0, 1, 1, 1, 1, 0]]") == 0) {
     // no data
     Serial.println("Turn the damn servo");
+    recvAsArray();
     return;
   }
   ble.waitForOK();
+}
+
+void recvAsArray() {
+delay(30);
+  
+  if (brailleArray[0] == 1){
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[1] == 1){
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[2] == 1){
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+
+  delay(30);
+
+  // Reset pegs
+  if (brailleArray[0] == 1){
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[1] == 1){
+    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
+      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+  if (brailleArray[2] == 1){
+    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
+      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
+      delay(15);                         // waits 15ms for the servo to reach the position
+    }
+  }
+
+  brailleArray[1] = 0;
+  brailleArray[2] = 0;
 }
 
 /**************************************************************************/
