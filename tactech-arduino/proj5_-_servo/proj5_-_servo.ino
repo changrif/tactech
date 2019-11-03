@@ -18,8 +18,7 @@ Servo peg6;
 int pos = 0;
 
 // --- Variables for recvAsString()
-String serialResponse = "";
-char sz[] = "Here; is some; sample;100;data;1.414;1020";
+String readString;
 String tempString = "";
 
 // --- Variables for recvAsArray()
@@ -61,40 +60,40 @@ void loop() {
 
 // --- Receive data as ARRAY
 // --- [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
-void recvAsArray() {
+void processString(String tempString) {
   delay(10);
   
-  if (brailleArray[0] == 1){
+  if (tempString.substring(0,1) == "1"){
     for(pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg1.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[1] == 1){
+  if (tempString.substring(2,3) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg2.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[2] == 1){
+  if (tempString.substring(4,5) == "1"){
     for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg3.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[3] == 1){
+  if (tempString.substring(6,7) == "1"){
     for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg4.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[4] == 1){
+  if (tempString.substring(8,9) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg5.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[5] == 1){
+  if (tempString.substring(10,11) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg6.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
@@ -105,37 +104,37 @@ void recvAsArray() {
 
   // Reset pegs
   
-  if (brailleArray[0] == 1){
+  if (tempString.substring(0,1) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg1.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[1] == 1){
+  if (tempString.substring(2,3) == "1"){
     for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg2.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[2] == 1){
+  if (tempString.substring(4,5) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg3.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[3] == 1){
+  if (tempString.substring(6,7) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
       peg4.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);  
     }
   }
-  if (brailleArray[4] == 1){
+  if (tempString.substring(8,9) == "1"){
     for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg5.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-  if (brailleArray[5] == 1){
+  if (tempString.substring(10,11) == "1"){
     for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
       peg6.write(pos);                   // tell servo to go to position in variable 'pos'
       delay(10);                         // waits 15ms for the servo to reach the position
@@ -153,36 +152,32 @@ void recvAsArray() {
 
 
 // Receive data as STRING
-// 0,1,1,1,1,0;1,0,0,0,1,0;1,1,1,0,0,0 == [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [1, 1, 1, 0, 0, 0]]
+// 0,1,1,1,1,0;1,0,0,0,1,0;1,1,1,0,0,0; == [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [1, 1, 1, 0, 0, 0]]
 void recvAsString() {
-    if ( Serial.available()) {
-    serialResponse = Serial.readStringUntil('\r\n');
-
-    // Convert from String Object to String.
-    char buf[sizeof(sz)];
-    serialResponse.toCharArray(buf, sizeof(buf));
-    char *p = buf;
-    char *str;
-    while ((str = strtok_r(p, ";", &p)) != NULL) // delimiter is the semicolon
-      // 0,1,1,1,1,0;
-      //tempString = str;
-      /*
-      delay(10);
+    if (Serial.available())  {
+      char c = Serial.read();        //gets one byte from serial buffer
       
-      if(str[0] = '1'){
-        for(pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-          peg1.write(pos);                   // tell servo to go to position in variable 'pos'
-          delay(10);                         // waits 15ms for the servo to reach the position
-        }
-      }*/
-      //Serial.println(tempString.substring(0,1));
-      //Serial.println(tempString);
-      Serial.println(str);
-      Serial.println("Test");
-      
-  }
-  
-}
+      //Parse for first cell
+      if (c == ';') {
+        //do stuff
+        tempString = readString;
+        Serial.println(tempString);  //prints string to serial port out
+        processString(tempString);
+        readString = "";             //clears variable for new input
+        
+        Serial.println(tempString.substring(0,1));
+        Serial.println(tempString.substring(2,3));
+        Serial.println(tempString.substring(4,5));
+        Serial.println(tempString.substring(6,7));
+        Serial.println(tempString.substring(8,9));
+        Serial.println(tempString.substring(10,11));
+                
+      }
+      else {     
+        readString += c; //makes the string readString
+      }
+  }   
+ }
 
 // Reset pegs
 void resetPegs() {
