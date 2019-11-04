@@ -140,14 +140,6 @@ void processString(String tempString) {
       delay(10);                         // waits 15ms for the servo to reach the position
     }
   }
-
-  //Exit
-  brailleArray[0] = 0;
-  brailleArray[1] = 0;
-  brailleArray[2] = 0;
-  brailleArray[3] = 0;
-  brailleArray[4] = 0;
-  brailleArray[5] = 0;
 }
 
 
@@ -171,18 +163,10 @@ void recvAsString() {
         Serial.println(tempString.substring(6,7));
         Serial.println(tempString.substring(8,9));
         Serial.println(tempString.substring(10,11));
-                
+        tempString = "";
       }
       else {     
         readString += c; //makes the string readString
       }
   }   
  }
-
-// Reset pegs
-void resetPegs() {
-  for (pos = 180; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-    peg2.write(pos);                    // tell servo to go to position in variable 'pos'
-    delay(15);                          // waits 15ms for the servo to reach the position
-  }
-}
