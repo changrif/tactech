@@ -224,6 +224,12 @@ void recvAsString(String c){
 // --- Process the string and convert into data for servos
 void processString(String tempString) {
   delay(10);
+  Serial.println(tempString.substring(0,1));
+  Serial.println(tempString.substring(2,3));
+  Serial.println(tempString.substring(4,5));
+  Serial.println(tempString.substring(6,7));
+  Serial.println(tempString.substring(8,9));
+  Serial.println(tempString.substring(10,11));
   
   if (tempString.substring(0,1) == "1"){
     for(pos = 0; pos <= 100; pos += 1) {

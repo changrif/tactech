@@ -65,7 +65,7 @@ void processString(String tempString) {
     }
   }
   if (tempString.substring(2,3) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) {
+    for (pos = 0; pos <= 100; pos += 1) {
       peg2.write(pos);
       delay(10);
     }
@@ -77,7 +77,7 @@ void processString(String tempString) {
     }
   }
   if (tempString.substring(6,7) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) {
+    for (pos = 100; pos >= 0; pos -= 1) {
       peg4.write(pos);
       delay(10);
     }
@@ -105,7 +105,7 @@ void processString(String tempString) {
     }
   }
   if (tempString.substring(2,3) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) {
+    for (pos = 100; pos >= 0; pos -= 1) {
       peg2.write(pos);
       delay(10);
     }
@@ -117,7 +117,7 @@ void processString(String tempString) {
     }
   }
   if (tempString.substring(6,7) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) {
+    for (pos = 0; pos <= 100; pos += 1) {
       peg4.write(pos);
       delay(10);
     }
