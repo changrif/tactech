@@ -108,13 +108,14 @@ void setup(void)
   peg3.attach(A3);
   peg4.attach(A4);
   peg5.attach(A5);
-  peg6.attach(6);
-  peg1.write(0);  
-  peg2.write(0);  
+  peg6.attach(A0);
+  peg1.write(0);
+  peg2.write(0);
   peg3.write(0);
-  peg4.write(0);  
-  peg5.write(100);  
-  peg6.write(100); 
+  peg4.write(0);
+  peg5.write(0);
+  peg6.write(0);
+  
     
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
   Serial.println(F("---------------------------------------"));
