@@ -102,21 +102,6 @@ void setup(void)
   // Match baud
   Serial.begin(115200);
   
-  // Attach servos
-  peg1.attach(A1);
-  peg2.attach(A2);
-  peg3.attach(A3);
-  peg4.attach(A4);
-  peg5.attach(A5);
-  peg6.attach(A0);
-  peg1.write(0);
-  peg2.write(0);
-  peg3.write(0);
-  peg4.write(0);
-  peg5.write(0);
-  peg6.write(0);
-  
-    
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
   Serial.println(F("---------------------------------------"));
 
@@ -166,6 +151,7 @@ void setup(void)
     Serial.println(F("******************************"));
   }
 
+  // Connects to Bluetooth
   Serial.println("<Arduino is ready>");
 }
 
@@ -175,7 +161,7 @@ void setup(void)
 */
 /**************************************************************************/
 void loop(void)
-{
+{ 
   // Check for user input
   char inputs[BUFSIZE+1];
 
@@ -211,6 +197,20 @@ void loop(void)
 int cellNum = 0;
 
 void recvAsString(String c){
+  // Attach servos
+  peg1.attach(A1);
+  peg2.attach(A2);
+  peg3.attach(A3);
+  peg4.attach(A4);
+  peg5.attach(A5);
+  peg6.attach(A0);
+  peg1.write(0);
+  peg2.write(0);
+  peg3.write(0);
+  peg4.write(100);
+  peg5.write(100);
+  peg6.write(100);
+  
   //1,0,0,0,0,1; - ONE CELL AT A TIME
   for(int i = 0; i <= c.length(); i++){
     if(c.substring(i, i+1) == ';'){
@@ -308,6 +308,14 @@ void processString(String tempString) {
       delay(10);
     }
   }
+
+  //Detach
+  peg1.detach();
+  peg2.detach();
+  peg3.detach();
+  peg4.detach();
+  peg5.detach();
+  peg6.detach();
 }
 /**************************************************************************/
 /*!
@@ -320,16 +328,31 @@ bool getUserInput(char buffer[], uint8_t maxSize)
   TimeoutTimer timeout(100);
 
   memset(buffer, 0, maxSize);
-  while( (!Serial.available()) && !timeout.expired() ) { delay(1); }
+  while( (!Serial.available()) && !timeout.expired() ) {
+    delay(1); 
+    peg1.write(0);
+    peg2.write(0);
+    peg3.write(0);
+    peg4.write(100);
+    peg5.write(100);
+    peg6.write(100);
+   }
 
   if ( timeout.expired() ) return false;
 
   delay(2);
   uint8_t count=0;
+  
   do
   {
     count += Serial.readBytes(buffer+count, maxSize);
     delay(2);
+    peg1.write(0);
+    peg2.write(0);
+    peg3.write(0);
+    peg4.write(100);
+    peg5.write(100);
+    peg6.write(100);
   } while( (count < maxSize) && (Serial.available()) );
 
   return true;

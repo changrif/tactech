@@ -40,7 +40,7 @@ void setup() {
     peg1.write(0);  
     peg2.write(0);  
     peg3.write(0);
-    peg4.write(0);  
+    peg4.write(100);  
     peg5.write(100);  
     peg6.write(100);  
     
