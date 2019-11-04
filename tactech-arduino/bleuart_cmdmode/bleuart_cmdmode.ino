@@ -12,18 +12,34 @@
  any redistribution
 *********************************************************************/
 
-#include <Arduino.h>
+//LIBRARIES
 #include <SPI.h>
 #include "Adafruit_BLE.h"
 #include "Adafruit_BluefruitLE_SPI.h"
 #include "Adafruit_BluefruitLE_UART.h"
-
 #include "BluefruitConfig.h"
-#include <Servo.h>  // Servo library
+#include <Servo.h>
 
 #if SOFTWARE_SERIAL_AVAILABLE
   #include <SoftwareSerial.h>
 #endif
+
+//VARIABLES
+// --- Servos
+Servo peg1;
+Servo peg2;
+Servo peg3;
+Servo peg4;
+Servo peg5;
+Servo peg6;
+
+// --- Variables for processString(String tempString)
+int pos = 0;
+
+// --- Variables for recvAsString()
+String readString;
+String tempString = "";
+
 
 /*=========================================================================
     APPLICATION SETTINGS
@@ -68,19 +84,6 @@ SoftwareSerial bluefruitSS = SoftwareSerial(BLUEFRUIT_SWUART_TXD_PIN, BLUEFRUIT_
 Adafruit_BluefruitLE_UART ble(bluefruitSS, BLUEFRUIT_UART_MODE_PIN,
                       BLUEFRUIT_UART_CTS_PIN, BLUEFRUIT_UART_RTS_PIN);
 
-
-/* ...or hardware serial, which does not need the RTS/CTS pins. Uncomment this line */
-// Adafruit_BluefruitLE_UART ble(Serial1, BLUEFRUIT_UART_MODE_PIN);
-
-/* ...hardware SPI, using SCK/MOSI/MISO hardware SPI pins and then user selected CS/IRQ/RST */
-//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_CS, BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
-
-/* ...software SPI, using SCK/MOSI/MISO user-defined SPI pins and then user selected CS/IRQ/RST */
-//Adafruit_BluefruitLE_SPI ble(BLUEFRUIT_SPI_SCK, BLUEFRUIT_SPI_MISO,
-//                             BLUEFRUIT_SPI_MOSI, BLUEFRUIT_SPI_CS,
-//                             BLUEFRUIT_SPI_IRQ, BLUEFRUIT_SPI_RST);
-
-
 // A small helper
 void error(const __FlashStringHelper*err) {
   Serial.println(err);
@@ -94,26 +97,24 @@ void error(const __FlashStringHelper*err) {
 */
 /**************************************************************************/
 
-Servo peg1;
-Servo peg2;
-Servo peg3;
-Servo peg4;
-Servo peg5;
-Servo peg6;
-int brailleArray[6] = {0, 1, 1, 1, 1, 0};
-int pos = 0;
-
 void setup(void)
 {
-  while (!Serial);  // required for Flora & Micro
-  delay(500);
-
+  // Match baud
   Serial.begin(115200);
   
-   // Attach servos
-    peg1.attach(A1);
-    peg2.attach(A2);
-    peg3.attach(A3); 
+  // Attach servos
+  peg1.attach(A1);
+  peg2.attach(A2);
+  peg3.attach(A3);
+  peg4.attach(A4);
+  peg5.attach(A5);
+  peg6.attach(6);
+  peg1.write(0);  
+  peg2.write(0);  
+  peg3.write(0);
+  peg4.write(0);  
+  peg5.write(100);  
+  peg6.write(100); 
     
   Serial.println(F("Adafruit Bluefruit Command Mode Example"));
   Serial.println(F("---------------------------------------"));
@@ -165,7 +166,6 @@ void setup(void)
   }
 
   Serial.println("<Arduino is ready>");
-
 }
 
 /**************************************************************************/
@@ -203,63 +203,105 @@ void loop(void)
   // Some data was found, its in the buffer
   Serial.print(F("[Recv] ")); char* c = ble.buffer;
   Serial.println(c);
-  if (strcmp(c, "[[0, 1, 1, 1, 1, 0]]") == 0) {
-    // no data
-    Serial.println("Turn the damn servo");
-    recvAsArray();
-    return;
-  }
+  recvAsString(c);
   ble.waitForOK();
 }
 
-void recvAsArray() {
-delay(30);
-  
-  if (brailleArray[0] == 1){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
-    }
-  }
-  if (brailleArray[1] == 1){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
-    }
-  }
-  if (brailleArray[2] == 1){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
-    }
-  }
+int cellNum = 0;
 
-  delay(30);
-
-  // Reset pegs
-  if (brailleArray[0] == 1){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
+void recvAsString(String c){
+  //1,0,0,0,0,1; - ONE CELL AT A TIME
+  for(int i = 0; i <= c.length(); i++){
+    if(c.substring(i, i+1) == ';'){
+      tempString = c.substring(0,i);
+      Serial.println(tempString);
+      processString(tempString);
+      tempString = "";
     }
   }
-  if (brailleArray[1] == 1){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
-    }
-  }
-  if (brailleArray[2] == 1){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(15);                         // waits 15ms for the servo to reach the position
-    }
-  }
-
-  brailleArray[1] = 0;
-  brailleArray[2] = 0;
 }
 
+// --- Process the string and convert into data for servos
+void processString(String tempString) {
+  delay(10);
+  
+  if (tempString.substring(0,1) == "1"){
+    for(pos = 0; pos <= 100; pos += 1) {
+      peg1.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(2,3) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg2.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(4,5) == "1"){
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg3.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(6,7) == "1"){
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg4.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(8,9) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg5.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(10,11) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg6.write(pos);
+      delay(10);
+    }
+  }
+
+  delay(20);
+
+  // Reset pegs
+  if (tempString.substring(0,1) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg1.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(2,3) == "1"){
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg2.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(4,5) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg3.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(6,7) == "1"){
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg4.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(8,9) == "1"){
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg5.write(pos);
+      delay(10);
+    }
+  }
+  if (tempString.substring(10,11) == "1"){
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg6.write(pos);
+      delay(10);
+    }
+  }
+}
 /**************************************************************************/
 /*!
     @brief  Checks for user input (via the Serial Monitor)

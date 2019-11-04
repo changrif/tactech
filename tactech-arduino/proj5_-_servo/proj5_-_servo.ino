@@ -1,11 +1,11 @@
-// [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [0, 1, 1, 1, 0, 0], [0, 1, 1, 1, 1, 0]] REAL RECEIPT
-// [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
+// Developer: Beatrice Villanueva
+// Project: tactech
+// Last Update: November 2019
 
-// 0,1,1,1,1,0;1,0,0,0,1,0 == [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0]]
+// 0,1,1,1,1,0;1,0,0,0,1,0 == [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0]] TEST RECEIPT
 
 //LIBRARIES
 #include <Servo.h>  // Servo library
-#include "Arduino.h"
 
 //VARIABLES
 // --- Servos
@@ -15,14 +15,13 @@ Servo peg3;
 Servo peg4;
 Servo peg5;
 Servo peg6;
+
+// --- Variables for processString(String tempString)
 int pos = 0;
 
 // --- Variables for recvAsString()
 String readString;
 String tempString = "";
-
-// --- Variables for recvAsArray()
-int brailleArray[6] = {1, 1, 1, 1, 1, 1}; // Braille peg array for something
 
 
 //METHODS
@@ -53,97 +52,92 @@ void loop() {
   
     // Receive data as STRING
     recvAsString();
-    
-    // Receive data as ARRAY
-    //recvAsArray();
 }
 
-// --- Receive data as ARRAY
-// --- [0, 1, 1, 1, 1, 0] # = 18 characters TEST RECEIPT
+// --- Process the string and convert into data for servos
 void processString(String tempString) {
   delay(10);
   
   if (tempString.substring(0,1) == "1"){
-    for(pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for(pos = 0; pos <= 100; pos += 1) {
+      peg1.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(2,3) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg2.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(4,5) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg3.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(6,7) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg4.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg4.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(8,9) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg5.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg5.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(10,11) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg6.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg6.write(pos);
+      delay(10);
     }
   }
 
   delay(20);
 
   // Reset pegs
-  
   if (tempString.substring(0,1) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg1.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg1.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(2,3) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg2.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg2.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(4,5) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg3.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg3.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(6,7) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) { // goes from 180 degrees to 0 degrees
-      peg4.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);  
+    for (pos = 100; pos >= 0; pos -= 1) {
+      peg4.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(8,9) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg5.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg5.write(pos);
+      delay(10);
     }
   }
   if (tempString.substring(10,11) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) { // goes from 180 degrees to 0 degrees
-      peg6.write(pos);                   // tell servo to go to position in variable 'pos'
-      delay(10);                         // waits 15ms for the servo to reach the position
+    for (pos = 0; pos <= 100; pos += 1) {
+      peg6.write(pos);
+      delay(10);
     }
   }
 }
 
 
-// Receive data as STRING
+// Receive data as string from the Serial Monitor
 // 0,1,1,1,1,0;1,0,0,0,1,0;1,1,1,0,0,0; == [[0, 1, 1, 1, 1, 0], [1, 0, 0, 0, 1, 0], [1, 1, 1, 0, 0, 0]]
 void recvAsString() {
     if (Serial.available())  {
@@ -153,7 +147,7 @@ void recvAsString() {
       if (c == ';') {
         //do stuff
         tempString = readString;
-        Serial.println(tempString);  //prints string to serial port out
+        Serial.println(tempString);
         processString(tempString);
         readString = "";             //clears variable for new input
         
