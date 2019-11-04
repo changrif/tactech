@@ -14,6 +14,8 @@
 		4E0D0A4E2325920300698D56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4E0D0A4C2325920300698D56 /* LaunchScreen.storyboard */; };
 		4E0D0A592325920300698D56 /* TactechTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0D0A582325920300698D56 /* TactechTests.swift */; };
 		4E0D0A642325920300698D56 /* TactechUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E0D0A632325920300698D56 /* TactechUITests.swift */; };
+		4E68A221236F8A1E00BCDF7A /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E68A220236F8A1E00BCDF7A /* TableViewCell.swift */; };
+		4ECCB2C0236FB1BD0055FA7B /* BrailleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ECCB2BF236FB1BD0055FA7B /* BrailleCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +49,8 @@
 		4E0D0A5F2325920300698D56 /* TactechUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TactechUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4E0D0A632325920300698D56 /* TactechUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TactechUITests.swift; sourceTree = "<group>"; };
 		4E0D0A652325920300698D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4E68A220236F8A1E00BCDF7A /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		4ECCB2BF236FB1BD0055FA7B /* BrailleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrailleCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,12 +101,14 @@
 		4E0D0A422325920200698D56 /* tactech */ = {
 			isa = PBXGroup;
 			children = (
-				4E0D0A432325920200698D56 /* AppDelegate.swift */,
+				4ECCB2BF236FB1BD0055FA7B /* BrailleCell.swift */,
 				4E0D0A452325920200698D56 /* ViewController.swift */,
+				4E0D0A432325920200698D56 /* AppDelegate.swift */,
 				4E0D0A472325920200698D56 /* Main.storyboard */,
 				4E0D0A4A2325920300698D56 /* Assets.xcassets */,
 				4E0D0A4C2325920300698D56 /* LaunchScreen.storyboard */,
 				4E0D0A4F2325920300698D56 /* Info.plist */,
+				4E68A220236F8A1E00BCDF7A /* TableViewCell.swift */,
 			);
 			path = tactech;
 			sourceTree = "<group>";
@@ -256,8 +262,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E68A221236F8A1E00BCDF7A /* TableViewCell.swift in Sources */,
 				4E0D0A462325920200698D56 /* ViewController.swift in Sources */,
 				4E0D0A442325920200698D56 /* AppDelegate.swift in Sources */,
+				4ECCB2C0236FB1BD0055FA7B /* BrailleCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
