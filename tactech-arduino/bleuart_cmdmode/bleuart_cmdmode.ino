@@ -35,6 +35,7 @@ Servo peg6;
 
 // --- Variables for processString(String tempString)
 int pos = 0;
+int pos2 = 0;
 
 // --- Variables for recvAsString()
 String readString;
@@ -231,45 +232,30 @@ void processString(String tempString) {
   Serial.println(tempString.substring(6,7));
   Serial.println(tempString.substring(8,9));
   Serial.println(tempString.substring(10,11));
-  
-  if (tempString.substring(0,1) == "1"){
-    for(pos = 0; pos <= 100; pos += 1) {
-      peg1.write(pos);
-      delay(10);
+
+  for(pos = 0, pos2 = 100; pos <= 100, pos2 >=0; pos+=1, pos2-= 1){
+    if (tempString.substring(0,1) == "1"){
+        peg1.write(pos);
     }
-  }
-  if (tempString.substring(2,3) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) {
-      peg2.write(pos);
-      delay(10);
+    if (tempString.substring(2,3) == "1"){
+        peg2.write(pos);
     }
-  }
-  if (tempString.substring(4,5) == "1"){
-    for (pos = 0; pos <= 100; pos += 1) {
-      peg3.write(pos);
-      delay(10);
+    if (tempString.substring(4,5) == "1"){
+        peg3.write(pos);
     }
-  }
-  if (tempString.substring(6,7) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) {
-      peg4.write(pos);
-      delay(10);
+    if (tempString.substring(6,7) == "1"){
+        peg4.write(pos2);
     }
-  }
-  if (tempString.substring(8,9) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) {
-      peg5.write(pos);
-      delay(10);
+    if (tempString.substring(8,9) == "1"){
+        peg5.write(pos2);
     }
-  }
-  if (tempString.substring(10,11) == "1"){
-    for (pos = 100; pos >= 0; pos -= 1) {
-      peg6.write(pos);
-      delay(10);
+    if (tempString.substring(10,11) == "1"){
+        peg6.write(pos2);
     }
+    delay(10);
   }
 
-  delay(20);
+  delay(100);
 
   // Reset pegs
   if (tempString.substring(0,1) == "1"){
