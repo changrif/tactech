@@ -1,46 +1,39 @@
 //
 //  BLECentralViewController.swift
-//  Basic Chat
+//  Tactech
 //
-//  Created by Trevor Beaton on 11/29/16.
-//  Copyright © 2016 Vanguard Logic LLC. All rights reserved.
+//  Created by Beatrice Villanueva and Chandler Griffin on 9/8/19.
+//  Copyright © 2019 Beatrice Villanueva and Chandler Griffin. All rights reserved.
 //
 
 import Foundation
 import UIKit
 import CoreBluetooth
 
-
 var txCharacteristic : CBCharacteristic?
 var rxCharacteristic : CBCharacteristic?
 var blePeripheral : CBPeripheral?
 var characteristicASCIIValue = NSString()
 
-
-
-class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBPeripheralDelegate, UITableViewDelegate, UITableViewDataSource{
+class BLECentralViewController : UIViewController   {
     
-    //Data
     var centralManager : CBCentralManager!
+    
+    var peripherals: [CBPeripheral] = []
     var RSSIs = [NSNumber]()
+    
     var data = NSMutableData()
     var writeData: String = ""
-    var peripherals: [CBPeripheral] = []
-    var characteristicValue = [CBUUID: NSData]()
-    var timer = Timer()
+
     var characteristics = [String : CBCharacteristic]()
+    var characteristicValue = [CBUUID: NSData]()
     
-    //UI
+    var timer = Timer()
+    
+    // ------------------------------------------------------
+    
     @IBOutlet weak var baseTableView: UITableView!
     @IBOutlet weak var refreshButton: UIBarButtonItem!
-    
-    @IBAction func refreshAction(_ sender: AnyObject) {
-        disconnectFromDevice()
-        self.peripherals = []
-        self.RSSIs = []
-        self.baseTableView.reloadData()
-        startScan()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,8 +41,7 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         self.baseTableView.dataSource = self
         self.baseTableView.reloadData()
         
-        /*Our key player in this app will be our CBCentralManager. CBCentralManager objects are used to manage discovered or connected remote peripheral devices (represented by CBPeripheral objects), including scanning for, discovering, and connecting to advertising peripherals.
-         */
+        // Used to manage discovered or connected remote peripheral devices.
         centralManager = CBCentralManager(delegate: self, queue: nil)
         let backButton = UIBarButtonItem(title: "Disconnect", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem = backButton
@@ -68,7 +60,18 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         centralManager?.stopScan()
     }
     
-    /*Okay, now that we have our CBCentalManager up and running, it's time to start searching for devices. You can do this by calling the "scanForPeripherals" method.*/
+    /* Refresh TableView of available BLE peripherals
+     *      - disconnect from any devices
+     *      - reset values to empty
+     *      - reload table and restart scan
+     */
+    @IBAction func refreshAction(_ sender: AnyObject) {
+        disconnectFromDevice()
+        self.peripherals = []
+        self.RSSIs = []
+        self.baseTableView.reloadData()
+        startScan()
+    }
     
     func startScan() {
         peripherals = []
@@ -80,7 +83,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    /*We also need to stop scanning at some point so we'll also create a function that calls "stopScan"*/
     func cancelScan() {
         self.centralManager?.stopScan()
         print("Scan Stopped")
@@ -92,11 +94,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
     }
     
     //-Terminate all Peripheral Connection
-    /*
-     Call this when things either go wrong, or you're done with the connection.
-     This cancels any subscriptions if there are any, or straight disconnects if not.
-     (didUpdateNotificationStateForCharacteristic will cancel the connection if a subscription is involved)
-     */
     func disconnectFromDevice () {
         if blePeripheral != nil {
             // We have a connection to the device but we are not subscribed to the Transfer Characteristic for some reason.
@@ -105,85 +102,59 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    
     func restoreCentralManager() {
         //Restores Central Manager delegate if something went wrong
         centralManager?.delegate = self
     }
     
-    /*
-     Called when the central manager discovers a peripheral while scanning. Also, once peripheral is connected, cancel scanning.
-     */
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        blePeripheral = peripheral
-        self.peripherals.append(peripheral)
-        self.RSSIs.append(RSSI)
-        peripheral.delegate = self
-        self.baseTableView.reloadData()
-        if blePeripheral == nil {
-            print("Found new pheripheral devices with services")
-            print("Peripheral name: \(String(describing: peripheral.name))")
-            print("**********************************")
-            print ("Advertisement Data : \(advertisementData)")
-        }
-    }
-    
-    //Peripheral Connections: Connecting, Connected, Disconnected
-    
     //-Connection
-    func connectToDevice () {
+    func connectToDevice() {
         centralManager?.connect(blePeripheral!, options: nil)
-    }
-    
-    /*
-     Invoked when a connection is successfully created with a peripheral.
-     This method is invoked when a call to connect(_:options:) is successful. You typically implement this method to set the peripheral’s delegate and to discover its services.
-     */
-    //-Connected
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("*****************************")
-        print("Connection complete")
-        print("Peripheral info: \(String(describing: blePeripheral))")
-        
-        //Stop Scan- We don't need to scan once we've connected to a peripheral. We got what we came for.
-        centralManager?.stopScan()
-        print("Scan Stopped")
-        
-        //Erase data that we might have
-        data.length = 0
-        
-        //Discovery callback
-        peripheral.delegate = self
-        //Only look for services that matches transmit uuid
-        peripheral.discoverServices([BLEService_UUID])
-        
-        
-        //Once connected, move to new view controller to manager incoming and outgoing data
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        let uartViewController = storyboard.instantiateViewController(withIdentifier: "UartModuleViewController") as! UartModuleViewController
-        
-        uartViewController.peripheral = peripheral
-        
-        navigationController?.pushViewController(uartViewController, animated: true)
-    }
-    
-    /*
-     Invoked when the central manager fails to create a connection with a peripheral.
-     */
-    
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        if error != nil {
-            print("Failed to connect to peripheral")
-            return
-        }
     }
     
     func disconnectAllConnection() {
         centralManager.cancelPeripheralConnection(blePeripheral!)
     }
     
+
+}
+
+// MARK: UITableViewDataSource
+
+extension BLECentralViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.peripherals.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //Connect to device where the peripheral is connected
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BlueCell") as! PeripheralTableViewCell
+        let peripheral = self.peripherals[indexPath.row]
+        let RSSI = self.RSSIs[indexPath.row]
+        
+        if peripheral.name == nil {
+            cell.peripheralLabel.text = "nil"
+        } else {
+            cell.peripheralLabel.text = peripheral.name
+        }
+        cell.rssiLabel.text = "RSSI: \(RSSI)"
+        
+        return cell
+    }
+}
+
+// MARK: UITableViewDelegate
+
+extension BLECentralViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        blePeripheral = peripherals[indexPath.row]
+        connectToDevice()
+    }
+}
+
+// MARK: CBPeripheralDelegate
+
+extension BLECentralViewController: CBPeripheralDelegate    {
     /*
      Invoked when you discover the peripheral’s available services.
      This method is invoked when your app calls the discoverServices(_:) method. If the services of the peripheral are successfully discovered, you can access them through the peripheral’s services property. If successful, the error parameter is nil. If unsuccessful, the error parameter returns the cause of the failure.
@@ -285,7 +256,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
     
-    
     func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
         print("*******************************************************")
         
@@ -300,13 +270,6 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
             print ("Subscribed. Notification has begun for: \(characteristic.uuid)")
         }
     }
-    
-    
-    
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Disconnected")
-    }
-    
     
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         guard error == nil else {
@@ -323,44 +286,81 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
         print("Succeeded!")
     }
-    
-    //Table View Functions
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.peripherals.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //Connect to device where the peripheral is connected
-        let cell = tableView.dequeueReusableCell(withIdentifier: "BlueCell") as! PeripheralTableViewCell
-        let peripheral = self.peripherals[indexPath.row]
-        let RSSI = self.RSSIs[indexPath.row]
+}
+
+// MARK: CBCentralManagerDelegate
+
+extension BLECentralViewController: CBCentralManagerDelegate    {
+    /*
+     Called when the central manager discovers a peripheral while scanning. Also, once peripheral is connected, cancel scanning.
+     */
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
-        
-        if peripheral.name == nil {
-            cell.peripheralLabel.text = "nil"
-        } else {
-            cell.peripheralLabel.text = peripheral.name
+        blePeripheral = peripheral
+        self.peripherals.append(peripheral)
+        self.RSSIs.append(RSSI)
+        peripheral.delegate = self
+        self.baseTableView.reloadData()
+        if blePeripheral == nil {
+            print("Found new pheripheral devices with services")
+            print("Peripheral name: \(String(describing: peripheral.name))")
+            print("**********************************")
+            print ("Advertisement Data : \(advertisementData)")
         }
-        cell.rssiLabel.text = "RSSI: \(RSSI)"
-        
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        blePeripheral = peripherals[indexPath.row]
-        connectToDevice()
     }
     
     /*
-     Invoked when the central manager’s state is updated.
-     This is where we kick off the scan if Bluetooth is turned on.
+     Invoked when a connection is successfully created with a peripheral.
+     This method is invoked when a call to connect(_:options:) is successful. You typically implement this method to set the peripheral’s delegate and to discover its services.
      */
+    //-Connected
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        print("*****************************")
+        print("Connection complete")
+        print("Peripheral info: \(String(describing: blePeripheral))")
+        
+        //Stop Scan- We don't need to scan once we've connected to a peripheral. We got what we came for.
+        centralManager?.stopScan()
+        print("Scan Stopped")
+        
+        //Erase data that we might have
+        data.length = 0
+        
+        //Discovery callback
+        peripheral.delegate = self
+        //Only look for services that matches transmit uuid
+        peripheral.discoverServices([BLEService_UUID])
+        
+        
+        //Once connected, move to new view controller to manager incoming and outgoing data
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        
+        let viewController = storyboard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+        
+        viewController.peripheral = peripheral
+        
+    navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    /*
+     Invoked when the central manager fails to create a connection with a peripheral.
+     */
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        if error != nil {
+            print("Failed to connect to peripheral")
+            return
+        }
+    }
+    
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        print("Disconnected")
+    }
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == CBManagerState.poweredOn {
             // We will just handle it the easy way here: if Bluetooth is on, proceed...start scan!
             print("Bluetooth Enabled")
             startScan()
-            
         } else {
             //If Bluetooth is off, display a UI alert message saying "Bluetooth is not enable" and "Make sure that your bluetooth is turned on"
             print("Bluetooth Disabled- Make sure your Bluetooth is turned on")
@@ -374,4 +374,3 @@ class BLECentralViewController : UIViewController, CBCentralManagerDelegate, CBP
         }
     }
 }
-

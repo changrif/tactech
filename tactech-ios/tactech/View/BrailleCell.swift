@@ -36,14 +36,14 @@ class BrailleCell: UICollectionViewCell {
         return Bool(val) ? UIColor.black : UIColor.white
     }
     
-    func setState(cell: [Int], label: [String]) {
-        self.label.text = String(label[0])
-        self.p1.backgroundColor = getColor(val: cell[0])
-        self.p2.backgroundColor = getColor(val: cell[1])
-        self.p3.backgroundColor = getColor(val: cell[2])
-        self.p4.backgroundColor = getColor(val: cell[3])
-        self.p5.backgroundColor = getColor(val: cell[4])
-        self.p6.backgroundColor = getColor(val: cell[5])
+    func setState(cell: Braille) {
+        self.label.text = cell.text
+        self.p1.backgroundColor = getColor(val: cell.p1)
+        self.p2.backgroundColor = getColor(val: cell.p2)
+        self.p3.backgroundColor = getColor(val: cell.p3)
+        self.p4.backgroundColor = getColor(val: cell.p4)
+        self.p5.backgroundColor = getColor(val: cell.p5)
+        self.p6.backgroundColor = getColor(val: cell.p6)
     }
     
     func clear()    {
