@@ -133,7 +133,7 @@ class UartModuleViewController: UIViewController, CBPeripheralManagerDelegate, U
     func outgoingData () {
         let appendString = "\n"
         
-        let inputText = "1,1,1,1,1,1;"//\(transcribe(text: inputTextField.text!))"
+        let inputText = inputTextField.text!
         print(inputText)
         
         let myFont = UIFont(name: "Helvetica Neue", size: 15.0)
