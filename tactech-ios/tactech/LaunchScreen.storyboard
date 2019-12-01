@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="PTE-eT-uKQ">
-    <device id="retina6_1" orientation="landscape" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController id="PTE-eT-uKQ" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="s6f-Ri-I9n">
-                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashScreen" translatesAutoresizingMaskIntoConstraints="NO" id="ZwO-n9-b4b">
-                                <rect key="frame" x="0.0" y="-27" width="896" height="582"/>
+                            <imageView opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashscreen" translatesAutoresizingMaskIntoConstraints="NO" id="ZwO-n9-b4b">
+                                <rect key="frame" x="0.0" y="318.5" width="414" height="269"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="ZwO-n9-b4b" secondAttribute="height" multiplier="414:269" id="rYa-Fq-DgQ"/>
                                 </constraints>
@@ -25,10 +25,17 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerX" secondItem="s6f-Ri-I9n" secondAttribute="centerX" constant="0.90000000000000002" id="1PM-UM-q0P"/>
+                            <constraint firstAttribute="trailing" secondItem="ZwO-n9-b4b" secondAttribute="trailing" id="A4y-r6-xHO"/>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="leading" secondItem="p2s-a7-5Rr" secondAttribute="leading" id="I6u-lu-loc"/>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerY" secondItem="s6f-Ri-I9n" secondAttribute="centerY" constant="7" id="KP0-by-Ntr"/>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerY" secondItem="s6f-Ri-I9n" secondAttribute="centerY" constant="0.5" id="Ntc-FC-gXi"/>
                             <constraint firstItem="ZwO-n9-b4b" firstAttribute="leading" secondItem="s6f-Ri-I9n" secondAttribute="leading" id="PoF-J1-e97"/>
                             <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerY" secondItem="s6f-Ri-I9n" secondAttribute="centerY" constant="57" id="afd-od-drt"/>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerY" secondItem="s6f-Ri-I9n" secondAttribute="centerY" constant="5" id="kAy-V8-s8H"/>
                             <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerX" secondItem="s6f-Ri-I9n" secondAttribute="centerX" id="me1-EQ-Ddj"/>
                             <constraint firstAttribute="trailing" secondItem="ZwO-n9-b4b" secondAttribute="trailing" id="nFL-hX-qEk"/>
+                            <constraint firstItem="ZwO-n9-b4b" firstAttribute="centerX" secondItem="s6f-Ri-I9n" secondAttribute="centerX" constant="5" id="wS7-xK-Jlc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="p2s-a7-5Rr"/>
                     </view>
@@ -39,6 +46,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="SplashScreen" width="582.5" height="1036.5"/>
+        <image name="splashscreen" width="582.5" height="1036.5"/>
     </resources>
 </document>
