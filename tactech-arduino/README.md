@@ -2,7 +2,7 @@
 ##### tactech-arduino houses all of our code that controls our project's hardware. The two folders are divided into **bleuart_cmdmode** and **servoTestCode**.
 
 
-### bleuart_cmdmode
+## bleuart_cmdmode
 bleuart_cmdmode is our main, working hardware code.
 
 * setup() sets up and factory resets our Adafruit Bluefruit module
@@ -18,7 +18,7 @@ bleuart_cmdmode is our main, working hardware code.
 * getUserInput() checks for user input
 
 
-### servoTestCode
+## servoTestCode
 servoTestCode is our testing environment for our servos that separates it from the Adafruit Bluefruit
 
 * setup() sets up our servos and attaches them
