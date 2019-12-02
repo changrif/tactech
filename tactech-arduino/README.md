@@ -1,5 +1,5 @@
 # tactech-arduino
-##### tactech-arduino houses all of our code that controls our project's hardware. The two folders are divided into **bleuart_cmdmode** and **servoTestCode**
+##### tactech-arduino houses our Arduino code that controls our project's hardware. The contents are divided into **bleuart_cmdmode** and **servoTestCode**
 
 
 ## bleuart_cmdmode
