@@ -283,13 +283,6 @@ void processString(String tempString) {
   delay(200);
 
   // Reset pegs
-//  for (pos = 100; pos >= 0; pos -= 1) {
-//    if(tempString.substring(0,1) == "1"){peg1.write(pos);}
-//    if(tempString.substring(2,3) == "1"){peg2.write(pos);}
-//    if(tempString.substring(4,5) == "1"){peg3.write(pos);}
-//    delay(2);
-//  }
-//  
   if (tempString.substring(0,1) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg1.write(pos);
