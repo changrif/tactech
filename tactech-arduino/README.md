@@ -1,9 +1,9 @@
 # tactech-arduino
-##### tactech-arduino houses all of our code that controls our project's hardware. The two folders are divided into **bleuart_cmdmode** and **servoTestCode**.
+##### tactech-arduino houses all of our code that controls our project's hardware. The two folders are divided into **bleuart_cmdmode** and **servoTestCode**
 
 
 ## bleuart_cmdmode
-bleuart_cmdmode is our main, working hardware code.
+bleuart_cmdmode is our main, working hardware code
 
 * setup() sets up and factory resets our Adafruit Bluefruit module
 
