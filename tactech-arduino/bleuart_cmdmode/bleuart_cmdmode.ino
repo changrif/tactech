@@ -189,12 +189,23 @@ void loop(void)
   }
   // Some data was found, its in the buffer
   Serial.print(F("[Recv] ")); char* c = ble.buffer;
-  Serial.println(c);
-  recvAsString(c);
+  String yes = convertToString(c);
+  Serial.println(yes);
+  if(yes.length() > 12){
+    while(yes.length() > 12){
+      recvAsString(yes.substring(0,11));
+      yes = yes.substring(12);
+    }
+  }
+  recvAsString(yes);
   ble.waitForOK();
 }
 
 int cellNum = 0;
+
+String convertToString(String c){
+  return c;
+}
 
 void recvAsString(String c){
   // Attach servos
@@ -235,79 +246,88 @@ void processString(String tempString) {
   if (tempString.substring(0,1) == "1"){
     for(pos = 0; pos <= 100; pos += 1) {
       peg1.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(2,3) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg2.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(4,5) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg3.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(6,7) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg4.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(8,9) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg5.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(10,11) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg6.write(pos);
-      delay(10);
+      delay(5);
     }
   }
 
-  delay(20);
+  delay(200);
 
   // Reset pegs
+//  for (pos = 100; pos >= 0; pos -= 1) {
+//    if(tempString.substring(0,1) == "1"){peg1.write(pos);}
+//    if(tempString.substring(2,3) == "1"){peg2.write(pos);}
+//    if(tempString.substring(4,5) == "1"){peg3.write(pos);}
+//    delay(2);
+//  }
+//  
   if (tempString.substring(0,1) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg1.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(2,3) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg2.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(4,5) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg3.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(6,7) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg4.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(8,9) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg5.write(pos);
-      delay(10);
+      delay(5);
     }
   }
   if (tempString.substring(10,11) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg6.write(pos);
-      delay(10);
+      delay(5);
     }
   }
+
+  delay(50);
 
   //Detach
   peg1.detach();

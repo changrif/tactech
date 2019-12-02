@@ -36,7 +36,7 @@ void setup() {
     peg3.attach(A3);
     peg4.attach(A4);
     peg5.attach(A5);
-    peg6.attach(6);
+    peg6.attach(A0);
     peg1.write(0);  
     peg2.write(0);  
     peg3.write(0);
@@ -61,37 +61,37 @@ void processString(String tempString) {
   if (tempString.substring(0,1) == "1"){
     for(pos = 0; pos <= 100; pos += 1) {
       peg1.write(pos);
-      delay(10);
+      delay(2);
     }
   }
   if (tempString.substring(2,3) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg2.write(pos);
-      delay(10);
+      delay(2);
     }
   }
   if (tempString.substring(4,5) == "1"){
     for (pos = 0; pos <= 100; pos += 1) {
       peg3.write(pos);
-      delay(10);
+      delay(2);
     }
   }
   if (tempString.substring(6,7) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg4.write(pos);
-      delay(10);
+      delay(2);
     }
   }
   if (tempString.substring(8,9) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg5.write(pos);
-      delay(10);
+      delay(2);
     }
   }
   if (tempString.substring(10,11) == "1"){
     for (pos = 100; pos >= 0; pos -= 1) {
       peg6.write(pos);
-      delay(10);
+      delay(2);
     }
   }
 
